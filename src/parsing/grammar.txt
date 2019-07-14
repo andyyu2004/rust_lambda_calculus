@@ -1,0 +1,24 @@
+
+<expr> ::= <abstraction> | <application> | <grouping> | <variable> | <binding>
+<binding> ::= <metavar> = <binding> | <abstraction>
+<abstraction> ::= \<variable>.<expr>
+<application> ::= <expr> <expr>
+<variable> ::= ID
+<metavar> ::= $<variable>
+
+application higher precedence than abstraction
+application left associative
+abstraction right associative
+
+<expr> ::= <abstraction>
+<abstraction> ::= \<variable>.<abstraction> | <application>
+<application> ::= <application> <primary> | <primary>
+<primary> ::= ( <expr> ) | <variable>
+
+Remove left recursion
+<add> ::= <add> + <mult>
+<add> ::= <mult> { + <mult> }
+<application> ::= <application> <> <primary>
+<application> ::= <primary> { <> <primary> }
+
+
