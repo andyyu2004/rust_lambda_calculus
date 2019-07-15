@@ -29,6 +29,7 @@ impl Lexer {
                 '\\' => tokens.push(self.create_token(TokenType::Lambda, char::to_string(&c))),
                 ' ' => tokens.push(self.create_token(TokenType::Space, char::to_string(&c))),
                 ';' => tokens.push(self.create_token(TokenType::Semicolon, char::to_string(&c))),
+                '=' => tokens.push(self.create_token(TokenType::Equal, char::to_string(&c))),
                 '<' => {
                     if let Some(curr) = it.next() {
                         if curr == '-' {

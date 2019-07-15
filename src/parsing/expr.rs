@@ -1,4 +1,5 @@
 use std::fmt::{Display, Formatter, Error};
+use crate::lexing::Token;
 
 #[derive(Debug, Clone)]
 pub enum Expr {
@@ -6,7 +7,8 @@ pub enum Expr {
     Abstraction(String, Box<Expr>),
     Application(Box<Expr>, Box<Expr>),
     Grouping(Box<Expr>),
-    Binding(String, Box<Expr>)
+    Binding(String, Box<Expr>),
+    MetaVariable(Token),
 }
 
 impl Display for Expr {
@@ -16,7 +18,8 @@ impl Display for Expr {
             Expr::Abstraction(var, expr) => write!(f, "\\{}.({})", var, expr),
             Expr::Application(left, right) => write!(f, "({} {})", left, right),
             Expr::Grouping(expr) => write!(f, "({})", expr),
-            Expr::Binding(name, expr) => write!(f, "{} <- {}", name, expr)
+            Expr::Binding(name, expr) => write!(f, "{} <- {}", name, expr),
+            Expr::MetaVariable(token) => write!(f, "{}", token.lexeme),
         }
     }
 }

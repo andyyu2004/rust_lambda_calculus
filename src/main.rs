@@ -3,6 +3,7 @@ use crate::parsing::{Parser};
 use crate::evaluating::Evaluator;
 use rustyline::Editor;
 use rustyline::error::ReadlineError;
+use crate::lexing::Token;
 
 extern crate rustyline;
 
@@ -10,11 +11,15 @@ mod lexing;
 mod parsing;
 mod evaluating;
 
+fn format_error(message: &str, token: Token) -> String {
+    format!("{}:{}: {}", token.line, token.col, message)
+}
+
 fn main() {
 
     let mut rl = Editor::<()>::new();
 
-    let evaluator = Evaluator::new();
+    let mut evaluator = Evaluator::new();
 
     loop {
         let input = match rl.readline("\\>>: ") {
@@ -24,7 +29,7 @@ fn main() {
             },
             Err(ReadlineError::Interrupted) => {
                 println!("CTRL-C");
-                break
+                continue;
             },
             Err(ReadlineError::Eof) => {
                 println!("CTRL-D");
@@ -35,8 +40,10 @@ fn main() {
                 break
             }
         };
-
+        
         if input.trim_end().is_empty() { continue; }
+        if input.trim_end() == "quit" { break; }
+        if input.trim_end() == ":q" { break; }
 
         let mut lexer = Lexer::new();
         let tokens = match lexer.lex(input) {
@@ -47,7 +54,7 @@ fn main() {
             }
         };
 
-        println!("{:?}", tokens);
+       println!("{:?}", tokens);
 
         let mut parser = Parser::new(tokens);
         let expr = match parser.parse() {
@@ -58,8 +65,8 @@ fn main() {
             }
         };
 
-        println!("{:#?}", expr);
-        println!("{}", expr);
+//        println!("{:#?}", expr);
+        println!("Parenthesized: {}", expr);
 
 //        evaluator.evaluate(expr);
         let redex = match evaluator.evaluate(expr) {
@@ -69,6 +76,7 @@ fn main() {
                 continue;
             }
         };
+
         println!("β-reduction: {}", redex);
 
     }

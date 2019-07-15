@@ -17,6 +17,7 @@ impl Parser {
     }
 
     pub fn parse(&mut self) -> Result<Expr, String> {
+        self.desugar_abstraction();
         self.parse_expression()
     }
 
@@ -28,8 +29,13 @@ impl Parser {
     fn parse_binding(&mut self) -> Result<Expr, String> {
         if self.r#match(TokenType::MetaVar) {
             let name = self.previous().lexeme.clone();
+            if !self.match_next_non_space(TokenType::Equal) {
+                // Undo advance from match
+                self.i -= 1;
+                return self.parse_abstraction();
+            }
             self.ignore_space();
-            self.expect(TokenType::LeftArrow)?;
+            self.expect(TokenType::Equal)?;
             self.ignore_space();
             let right = self.parse_binding()?;
             Ok(Expr::Binding(name, Box::new(right)))
@@ -50,6 +56,24 @@ impl Parser {
             self.parse_application()
         }
     }
+
+//    Allowing syntactic sugar
+//    // <abstraction> ::= \<var>+.<abstraction>
+//    fn parse_abstraction(&mut self) -> Result<Expr, String> {
+//        if self.r#match(TokenType::Lambda) {
+//            self.expect(TokenType::Var)?.lexeme.clone();
+//            self.i -= 1;
+//            while self.r#match(TokenType::Var) {
+//                let name = self.previous().lexeme.clone();
+//                Ok(Expr::Abstraction(name, Box::new(self.parse_abstraction()?)))
+//            }
+//            self.expect(TokenType::Dot)?;
+//            let right = self.parse_abstraction()?;
+//            Ok(Expr::Abstraction(name, Box::new(right)))
+//        } else {
+//            self.parse_application()
+//        }
+//    }
 
     // <application> ::= <primary> { < > <primary> }
     fn parse_application(&mut self) -> Result<Expr, String> {
@@ -73,6 +97,9 @@ impl Parser {
         } else if self.r#match(TokenType::Var) {
             let name = self.previous().lexeme.clone();
             Ok(Expr::Variable(name))
+        } else if self.r#match(TokenType::MetaVar) {
+            let token = self.previous().clone();
+            Ok(Expr::MetaVariable(token))
         }
         else {
             let current = self.current();
@@ -108,6 +135,17 @@ impl Parser {
         }
     }
 
+    fn match_next_non_space(&mut self, ttype: TokenType) -> bool {
+        let mut i = self.i;
+        while self.tokens[i].ttype == TokenType::Space {
+            i += 1;
+        }
+        if i < self.tokens.len() && self.tokens[i].ttype == ttype {
+            self.i = i;
+            true
+        } else { false }
+    }
+
     fn ignore_space(&mut self) {
         while self.current().ttype == TokenType::Space {
             self.i += 1;
@@ -118,4 +156,20 @@ impl Parser {
         let Token { line, col , .. } = self.current();
         format!("error {}:{}: {}", line, col, message)
     }
+
+    // \xyz.E -> \x.\y.\z.E
+    fn desugar_abstraction(&mut self) {
+        let mut i = 0;
+        while i < self.tokens.len() {
+            let x = &self.tokens[i];
+            i += 1;
+            if x.ttype != TokenType::Lambda { continue; }
+            while self.tokens[i+1].ttype == TokenType::Var && i < self.tokens.len() {
+                self.tokens.insert(i+1, Token::new(TokenType::Dot, ".".to_string(), -1, -1));
+                self.tokens.insert(i+2, Token::new(TokenType::Lambda, "\\".to_string(), -1, -1));
+                i += 3;
+            }
+        }
+    }
+
 }

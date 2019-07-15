@@ -5,17 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b349d9c-56ad-4f64-991e-99a9c39fe7c4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/andy.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/r_lambda_calculus.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/evaluating/evaluator.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/evaluating/mod.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/lexing/token.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/parsing/expr.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/parsing/grammar.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/parsing/mod.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/parsing/parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/evaluating/evaluator.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/evaluating/evaluator.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lexing/lexer.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lexing/lexer.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lexing/token.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lexing/token.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parsing/expr.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parsing/expr.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parsing/parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parsing/parser.rs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,8 +28,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="113">
-              <caret line="56" column="25" lean-forward="true" selection-start-line="56" selection-start-column="25" selection-end-line="56" selection-end-column="25" />
+            <state relative-caret-position="374">
+              <caret line="72" column="29" selection-start-line="72" selection-start-column="29" selection-end-line="72" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -56,11 +52,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/evaluating/evaluator.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="23" column="10" lean-forward="true" selection-start-line="23" selection-start-column="10" selection-end-line="23" selection-end-column="10" />
+            <state relative-caret-position="181">
+              <caret line="18" column="56" selection-start-line="18" selection-start-column="56" selection-end-line="18" selection-end-column="56" />
             </state>
           </provider>
         </entry>
@@ -74,20 +70,18 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/parsing/parser.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="78" column="113" lean-forward="true" selection-start-line="78" selection-start-column="113" selection-end-line="78" selection-end-column="113" />
+            <state relative-caret-position="402">
+              <caret line="161" column="22" lean-forward="true" selection-start-line="161" selection-start-column="22" selection-end-line="161" selection-end-column="22" />
               <folding>
-                <element signature="e#342#343#0" expanded="true" />
-                <element signature="e#380#381#0" expanded="true" />
                 <element signature="e#442#443#0" expanded="true" />
                 <element signature="e#477#478#0" expanded="true" />
-                <element signature="e#2384#2385#0" expanded="true" />
-                <element signature="e#2419#2420#0" expanded="true" />
-                <element signature="e#2455#2456#0" expanded="true" />
-                <element signature="e#2494#2495#0" expanded="true" />
+                <element signature="e#3619#3620#0" expanded="true" />
+                <element signature="e#3654#3655#0" expanded="true" />
+                <element signature="e#3690#3691#0" expanded="true" />
+                <element signature="e#3729#3730#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -97,7 +91,7 @@
         <entry file="file://$PROJECT_DIR$/src/parsing/grammar.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="34">
-              <caret line="2" column="24" lean-forward="true" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
+              <caret line="2" column="24" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -105,8 +99,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/parsing/expr.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+            <state relative-caret-position="272">
+              <caret line="16" column="31" selection-start-line="16" selection-start-column="31" selection-end-line="16" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -114,8 +108,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lexing/token.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="436">
-              <caret line="38" column="14" selection-start-line="38" selection-start-column="14" selection-end-line="38" selection-end-column="14" />
+            <state relative-caret-position="17">
+              <caret line="2" column="16" selection-start-line="2" selection-start-column="16" selection-end-line="2" selection-end-column="16" />
               <folding>
                 <element signature="e#455#456#0" expanded="true" />
                 <element signature="e#478#479#0" expanded="true" />
@@ -127,8 +121,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lexing/lexer.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1292">
-              <caret line="77" column="57" selection-start-line="77" selection-start-column="57" selection-end-line="77" selection-end-column="57" />
+            <state relative-caret-position="249">
+              <caret line="37" column="47" selection-start-line="37" selection-start-column="47" selection-end-line="37" selection-end-column="47" />
               <folding>
                 <element signature="e#3298#3299#0" expanded="true" />
                 <element signature="e#3350#3351#0" expanded="true" />
@@ -161,15 +155,15 @@
       <list>
         <option value="$PROJECT_DIR$/src/parsing/mod.rs" />
         <option value="$PROJECT_DIR$/src/lexing/mod.rs" />
-        <option value="$PROJECT_DIR$/src/evaluating/mod.rs" />
         <option value="$PROJECT_DIR$/Cargo.toml" />
         <option value="$PROJECT_DIR$/src/parsing/grammar.txt" />
         <option value="$PROJECT_DIR$/src/parsing/expr.rs" />
         <option value="$PROJECT_DIR$/src/lexing/token.rs" />
+        <option value="$PROJECT_DIR$/src/evaluating/mod.rs" />
         <option value="$PROJECT_DIR$/src/lexing/lexer.rs" />
+        <option value="$PROJECT_DIR$/src/evaluating/evaluator.rs" />
         <option value="$PROJECT_DIR$/src/main.rs" />
         <option value="$PROJECT_DIR$/src/parsing/parser.rs" />
-        <option value="$PROJECT_DIR$/src/evaluating/evaluator.rs" />
       </list>
     </option>
   </component>
@@ -343,6 +337,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Cargo.toml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/parsing/grammar.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="24" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lexing/token.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="2" column="16" selection-start-line="2" selection-start-column="16" selection-end-line="2" selection-end-column="16" />
+          <folding>
+            <element signature="e#455#456#0" expanded="true" />
+            <element signature="e#478#479#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/parsing/mod.rs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -357,42 +376,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Cargo.toml">
+    <entry file="file://$PROJECT_DIR$/src/evaluating/evaluator.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/parsing/grammar.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="24" lean-forward="true" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
+        <state relative-caret-position="181">
+          <caret line="18" column="56" selection-start-line="18" selection-start-column="56" selection-end-line="18" selection-end-column="56" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/parsing/expr.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+        <state relative-caret-position="272">
+          <caret line="16" column="31" selection-start-line="16" selection-start-column="31" selection-end-line="16" selection-end-column="31" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lexing/token.rs">
+    <entry file="file://$PROJECT_DIR$/src/main.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="436">
-          <caret line="38" column="14" selection-start-line="38" selection-start-column="14" selection-end-line="38" selection-end-column="14" />
-          <folding>
-            <element signature="e#455#456#0" expanded="true" />
-            <element signature="e#478#479#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="374">
+          <caret line="72" column="29" selection-start-line="72" selection-start-column="29" selection-end-line="72" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lexing/lexer.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1292">
-          <caret line="77" column="57" selection-start-line="77" selection-start-column="57" selection-end-line="77" selection-end-column="57" />
+        <state relative-caret-position="249">
+          <caret line="37" column="47" selection-start-line="37" selection-start-column="47" selection-end-line="37" selection-end-column="47" />
           <folding>
             <element signature="e#3298#3299#0" expanded="true" />
             <element signature="e#3350#3351#0" expanded="true" />
@@ -402,34 +410,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="56" column="25" lean-forward="true" selection-start-line="56" selection-start-column="25" selection-end-line="56" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/parsing/parser.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="78" column="113" lean-forward="true" selection-start-line="78" selection-start-column="113" selection-end-line="78" selection-end-column="113" />
+        <state relative-caret-position="402">
+          <caret line="161" column="22" lean-forward="true" selection-start-line="161" selection-start-column="22" selection-end-line="161" selection-end-column="22" />
           <folding>
-            <element signature="e#342#343#0" expanded="true" />
-            <element signature="e#380#381#0" expanded="true" />
             <element signature="e#442#443#0" expanded="true" />
             <element signature="e#477#478#0" expanded="true" />
-            <element signature="e#2384#2385#0" expanded="true" />
-            <element signature="e#2419#2420#0" expanded="true" />
-            <element signature="e#2455#2456#0" expanded="true" />
-            <element signature="e#2494#2495#0" expanded="true" />
+            <element signature="e#3619#3620#0" expanded="true" />
+            <element signature="e#3654#3655#0" expanded="true" />
+            <element signature="e#3690#3691#0" expanded="true" />
+            <element signature="e#3729#3730#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/evaluating/evaluator.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="23" column="10" lean-forward="true" selection-start-line="23" selection-start-column="10" selection-end-line="23" selection-end-column="10" />
         </state>
       </provider>
     </entry>

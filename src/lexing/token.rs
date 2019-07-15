@@ -1,6 +1,6 @@
-use std::fmt::{Display, Formatter, Error};
+use std::fmt::{Debug, Display, Formatter, Error};
 
-#[derive(Debug)]
+#[derive(Clone)]
 pub struct Token {
     pub ttype: TokenType,
     pub lexeme: String,
@@ -16,6 +16,12 @@ impl Token {
             line,
             col
         }
+    }
+}
+
+impl Debug for Token {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
+        write!(f, "{:?}", self.ttype)
     }
 }
 
@@ -37,4 +43,5 @@ pub enum TokenType {
     MetaVar,
     LeftArrow,
     Semicolon,
+    Equal,
 }
