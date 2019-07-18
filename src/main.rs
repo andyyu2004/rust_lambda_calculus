@@ -1,22 +1,24 @@
-use lexing::Lexer;
-use crate::parsing::{Parser};
-use crate::evaluating::Evaluator;
+extern crate rustyline;
+
 use rustyline::Editor;
 use rustyline::error::ReadlineError;
-use crate::lexing::Token;
 
-extern crate rustyline;
+use lexing::Lexer;
+
+use crate::evaluating::Evaluator;
+use crate::lexing::Token;
+use crate::parsing::Parser;
+
 
 mod lexing;
 mod parsing;
 mod evaluating;
 
-fn format_error(message: &str, token: Token) -> String {
+fn format_error(message: &str, token: &Token) -> String {
     format!("{}:{}: {}", token.line, token.col, message)
 }
 
 fn main() {
-
     let mut rl = Editor::<()>::new();
 
     let mut evaluator = Evaluator::new();
@@ -26,21 +28,20 @@ fn main() {
             Ok(line) => {
                 rl.add_history_entry(line.as_str());
                 line
-            },
+            }
             Err(ReadlineError::Interrupted) => {
-                println!("CTRL-C");
                 continue;
-            },
+            }
             Err(ReadlineError::Eof) => {
                 println!("CTRL-D");
-                break
-            },
+                break;
+            }
             Err(err) => {
                 println!("Error: {:?}", err);
-                break
+                break;
             }
         };
-        
+
         if input.trim_end().is_empty() { continue; }
         if input.trim_end() == "quit" { break; }
         if input.trim_end() == ":q" { break; }
@@ -54,7 +55,7 @@ fn main() {
             }
         };
 
-       println!("{:?}", tokens);
+        println!("{:?}", tokens);
 
         let mut parser = Parser::new(tokens);
         let expr = match parser.parse() {
@@ -78,6 +79,5 @@ fn main() {
         };
 
         println!("β-reduction: {}", redex);
-
     }
 }

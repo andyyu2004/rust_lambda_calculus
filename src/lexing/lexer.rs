@@ -1,6 +1,7 @@
-use crate::lexing::token::{Token, TokenType};
 use std::iter::Peekable;
 use std::str::Chars;
+
+use crate::lexing::token::{Token, TokenType};
 
 pub struct Lexer {
     line: i32,
@@ -38,19 +39,19 @@ impl Lexer {
                             errors.push(self.format_error(format!("Unexpected character: <{}", curr)))
                         }
                     }
-                },
-                'a' ... 'z' => tokens.push(
+                }
+                'a'...'z' => tokens.push(
                     self.create_token(
-                        TokenType::Var, char::to_string(&c)
+                        TokenType::Var, char::to_string(&c),
                     )
                 ),
-                '$' => {
-                    match self.parse_metavariable(&mut it) {
+                '$' | 'A'...'Z' => {
+                    match self.parse_metavariable(&mut it, c) {
                         Ok(x) => tokens.push(x),
                         Err(err) => errors.push(err)
                     };
                     continue;
-                },
+                }
                 '\n' => {
                     self.line += 1;
                     self.col = 0;
@@ -68,7 +69,6 @@ impl Lexer {
         } else {
             Err(errors)
         }
-
     }
 
     fn create_token(&self, ttype: TokenType, lexeme: String) -> Token {
@@ -79,37 +79,34 @@ impl Lexer {
         format!("{}:{}: {}", self.line, self.col, message)
     }
 
-    fn parse_metavariable(&mut self, it: &mut Peekable<Chars>) -> Result<Token, String> {
-        let mut acc = "$".to_string();
+    fn parse_metavariable(&mut self, it: &mut Peekable<Chars>, first: char) -> Result<Token, String> {
+        let mut acc = first.to_string();
         let col = self.col;
-        if let Some(c) = it.next() {
-            if !Lexer::is_id_start(&c) {
-                return Err(format!("Invalid identifier {}", c));
-            } else {
-                acc.push(c);
-                self.col += 1;
-            }
-        }
+
+//        if let Some(c) = it.next() {
+//            if !Lexer::is_id_start(c) { // Could change back to is_id_start. But allow numeric first chars
+//                return Err(format!("Invalid identifier {}", c));
+//            } else {
+//                acc.push(c);
+//                self.col += 1;
+//            }
+//        }
 
         while let Some(c) = it.peek() {
-            if !Lexer::is_id_char(c) {
-                break;
-            }
+            if !Lexer::is_id_char(*c) { break; }
             acc.push(*c);
             self.col += 1;
             it.next();
         }
 
         Ok(Token::new(TokenType::MetaVar, acc, self.line, col))
-
     }
 
-    fn is_id_start(c: &char) -> bool {
+    fn is_id_start(c: char) -> bool {
         'c' == '_' || c.is_ascii_alphabetic()
     }
 
-    fn is_id_char(c: &char) -> bool {
-        Lexer::is_id_start(&c) || c.is_ascii_digit()
+    fn is_id_char(c: char) -> bool {
+        Lexer::is_id_start(c) || c.is_ascii_digit()
     }
-
 }

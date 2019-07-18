@@ -1,4 +1,5 @@
-use std::fmt::{Display, Formatter, Error};
+use std::fmt::{Display, Error, Formatter};
+
 use crate::lexing::Token;
 
 #[derive(Debug, Clone)]
@@ -15,7 +16,7 @@ impl Display for Expr {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         match self {
             Expr::Variable(name) => write!(f, "{}", name),
-            Expr::Abstraction(var, expr) => write!(f, "\\{}.({})", var, expr),
+            Expr::Abstraction(var, expr) => write!(f, "(\\{}.({}))", var, expr),
             Expr::Application(left, right) => write!(f, "({} {})", left, right),
             Expr::Grouping(expr) => write!(f, "({})", expr),
             Expr::Binding(name, expr) => write!(f, "{} <- {}", name, expr),

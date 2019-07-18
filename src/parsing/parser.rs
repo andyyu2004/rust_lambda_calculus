@@ -3,12 +3,11 @@ use crate::parsing::Expr;
 
 pub struct Parser {
     i: usize,
-    tokens: Vec<Token>
+    tokens: Vec<Token>,
 }
 
 // Parsing expressions
 impl Parser {
-
     pub fn new(tokens: Vec<Token>) -> Parser {
         Parser {
             tokens,
@@ -22,7 +21,16 @@ impl Parser {
     }
 
     fn parse_expression(&mut self) -> Result<Expr, String> {
+
         self.parse_binding()
+//        let expr = self.parse_binding()?;
+//        if self.i >= self.tokens.len() - 2 {
+//            Ok(expr)
+//        } else {
+//            Err(self.format_error(format!("Parser didn\'t consume entire input, stopped at {}", self.current().lexeme)))
+//        }
+
+
     }
 
     // <binding> ::= <metavar> = <binding> | <abstraction>
@@ -42,7 +50,6 @@ impl Parser {
         } else {
             self.parse_abstraction()
         }
-
     }
 
     // <abstraction> ::= \<var>.<abstraction>
@@ -82,7 +89,7 @@ impl Parser {
             let right = self.parse_primary()?;
             expr = Ok(Expr::Application(
                 Box::new(expr?),
-                Box::new(right)
+                Box::new(right),
             ));
         }
         expr
@@ -100,18 +107,20 @@ impl Parser {
         } else if self.r#match(TokenType::MetaVar) {
             let token = self.previous().clone();
             Ok(Expr::MetaVariable(token))
-        }
-        else {
+        } else if self.r#match(TokenType::Lambda) {
+            // Think this is correct?
+            // Allows lambda abstraction as second argument of application
+            self.i -= 1;
+            self.parse_abstraction()
+        } else {
             let current = self.current();
             Err(format!("{}:{}: Failed to parse primary, unexpected token {}", current.line, current.col, current))
         }
     }
-
 }
 
 // Utility
 impl Parser {
-
     fn current(&self) -> &Token {
         &self.tokens[self.i]
     }
@@ -153,7 +162,7 @@ impl Parser {
     }
 
     fn format_error(&self, message: String) -> String {
-        let Token { line, col , .. } = self.current();
+        let Token { line, col, .. } = self.current();
         format!("error {}:{}: {}", line, col, message)
     }
 
@@ -164,12 +173,11 @@ impl Parser {
             let x = &self.tokens[i];
             i += 1;
             if x.ttype != TokenType::Lambda { continue; }
-            while self.tokens[i+1].ttype == TokenType::Var && i < self.tokens.len() {
-                self.tokens.insert(i+1, Token::new(TokenType::Dot, ".".to_string(), -1, -1));
-                self.tokens.insert(i+2, Token::new(TokenType::Lambda, "\\".to_string(), -1, -1));
+            while self.tokens[i + 1].ttype == TokenType::Var && i < self.tokens.len() {
+                self.tokens.insert(i + 1, Token::new(TokenType::Dot, ".".to_string(), -1, -1));
+                self.tokens.insert(i + 2, Token::new(TokenType::Lambda, "\\".to_string(), -1, -1));
                 i += 3;
             }
         }
     }
-
 }

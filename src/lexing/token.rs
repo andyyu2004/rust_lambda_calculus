@@ -1,4 +1,4 @@
-use std::fmt::{Debug, Display, Formatter, Error};
+use std::fmt::{Debug, Display, Error, Formatter};
 
 #[derive(Clone)]
 pub struct Token {
@@ -14,7 +14,7 @@ impl Token {
             ttype,
             lexeme,
             line,
-            col
+            col,
         }
     }
 }
@@ -35,7 +35,8 @@ impl Display for Token {
 pub enum TokenType {
     Lambda,
     Var,
-    Space, // Very important for function application
+    Space,
+    // Very important for function application
     Dot,
     LParen,
     RParen,
