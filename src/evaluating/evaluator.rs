@@ -1,17 +1,19 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use crate::format_error;
 use crate::parsing::Expr;
 use crate::lexing::Token;
 
 pub struct Evaluator {
-    env: HashMap<String, Expr>
+    env: HashMap<String, Expr>,
+    names: HashSet<String>
 }
 
 impl Evaluator {
     pub fn new() -> Evaluator {
         Evaluator {
-            env: HashMap::new()
+            env: HashMap::new(),
+            names: HashSet::new()
         }
     }
 }
@@ -20,7 +22,8 @@ impl Evaluator {
 
     pub fn evaluate(&mut self, expression: Expr) -> Result<Expr, String> {
         let expr = self.expand_bindings(&expression)?;
-        println!("Expanded {}", expr);
+        println!("Expanded (parenthesized): {:?}", expr);
+        println!("Expanded: {}", expr);
         self.beta_reduce(expr)
     }
 
@@ -92,8 +95,9 @@ impl Evaluator {
     // }
 
     fn reduce_application(&mut self, left: &Expr, right: &Expr) -> Result<Expr, String> {
+        // if expr is redex
         if let Expr::Abstraction(name, expr) = self.beta_reduce(left.clone())? {
-            self.beta_reduce(self.substitute(&expr, &name, right.clone())?)
+            self.beta_reduce(self.substitute(&expr, &name, right)?)
         } else {
             Ok(Expr::Application(Box::new(left.clone()), Box::new(right.clone())))
         }
@@ -106,14 +110,14 @@ impl Evaluator {
     (\y.E)[x->N] \y.E[x->N]
     */
 
-    pub fn substitute(&self, expression: &Expr, var: &str, with: Expr) -> Result<Expr, String> {
+    pub fn substitute(&self, expression: &Expr, var: &str, with: &Expr) -> Result<Expr, String> {
         match expression {
             Expr::Variable(name) => {
-                if name == var { Ok(with) } else { Ok(expression.clone()) }
+                if name == var { Ok(with.clone()) } else { Ok(expression.clone()) }
             }
             Expr::Application(left, right) =>
                 Ok(Expr::Application(
-                    Box::new(self.substitute(left, var, with.clone())?),
+                    Box::new(self.substitute(left, var, with)?),
                     Box::new(self.substitute(right, var, with)?),
                 )),
             Expr::Grouping(expr) =>
@@ -123,4 +127,25 @@ impl Evaluator {
             _ => unreachable!(),
         }
     }
+
+    // Alpha conversion
+    pub fn alpha_rename(expression: &Expr, from: &String, to: &String) -> Expr {
+        match expression {
+            Expr::Variable(name) => if name == from { Expr::Variable(to.clone()) } else { expression.clone() },
+            Expr::Application(left, right) => Expr::Application(
+                Box::new(Evaluator::alpha_rename(left, from,to)),
+                Box::new(Evaluator::alpha_rename(right, from, to)),
+            ),
+            Expr::Grouping(expr) => Expr::Grouping(Box::new(Evaluator::alpha_rename(expr, from, to))),
+            Expr::Abstraction(name, expr) => if name == from {
+                Expr::Abstraction(to.clone(), Box::new(Evaluator::alpha_rename(expr, from, to)))
+            } else {
+                Expr::Abstraction(name.clone(), Box::new(Evaluator::alpha_rename(expr, from, to)))
+            },
+            Expr::Binding(name, expr) => Expr::Binding(name.clone(), Box::new(Evaluator::alpha_rename(expr, from, to))),
+            _ => unreachable!("Alpha renaming metavariable or binding")
+
+        }
+    }
+
 }

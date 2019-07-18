@@ -66,8 +66,12 @@ fn main() {
             }
         };
 
+//        println!("{:?}", expr);
 //        println!("{:#?}", expr);
-        println!("Parenthesized: {}", expr);
+        println!("Parenthesized: {:?}", expr);
+        println!("{}", expr);
+
+        println!("Renamed to t: {}", Evaluator::alpha_rename(&expr, &"x".to_string(), &"t".to_string()));
 
 //        evaluator.evaluate(expr);
         let redex = match evaluator.evaluate(expr) {
@@ -78,6 +82,7 @@ fn main() {
             }
         };
 
+        println!("β-reduction (parenthesized): {:?}", redex);
         println!("β-reduction: {}", redex);
     }
 }
