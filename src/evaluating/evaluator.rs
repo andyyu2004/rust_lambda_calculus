@@ -53,7 +53,7 @@ impl Evaluator {
 
     pub fn beta_reduce(&mut self, expression: Expr) -> Result<Expr, String> {
         match expression {
-            Expr::Abstraction(_, _) => Ok(expression),
+            Expr::Abstraction(name, expr) => Ok(Expr::Abstraction(name, Box::new(self.beta_reduce(*expr.clone())?)))
             Expr::Application(ref left, ref right) => self.reduce_application(&left, &right),
             Expr::Grouping(expr) => self.beta_reduce(*expr),
             Expr::Variable(_) => Ok(expression),
@@ -72,7 +72,7 @@ impl Evaluator {
         match self.env.get(&token.lexeme) {
             Some(expr) => {
                 let clone = expr.clone();
-                self.expand_bindings(&clone)
+                self.beta_reduce(clone)
             },
             None => Err(format_error(&format!("Undefined metavariable: {}", token.lexeme), token))
         }
@@ -110,7 +110,7 @@ impl Evaluator {
             let substitution = self.substitute(&expr, &name, right)?;
             self.beta_reduce(substitution)
         } else {
-            Ok(Expr::Application(Box::new(left.clone()), Box::new(right.clone())))
+            Ok(Expr::Application(Box::new(self.beta_reduce(left.clone())?), Box::new(self.beta_reduce(right.clone())?)))
         }
     }
 
