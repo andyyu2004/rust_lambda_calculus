@@ -2,8 +2,10 @@
   <dictionary name="andy">
     <words>
       <w>abcdefghijklmnopqrstuvwxyz</w>
+      <w>combinators</w>
       <w>metavar</w>
       <w>metavariable</w>
+      <w>metavariables</w>
       <w>mult</w>
       <w>redex</w>
       <w>rustyline</w>

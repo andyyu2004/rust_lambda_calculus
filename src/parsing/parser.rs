@@ -27,7 +27,7 @@ impl Parser {
 //        if self.i >= self.tokens.len() - 2 {
 //            Ok(expr)
 //        } else {
-//            Err(self.format_error(format!("Parser didn\'t consume entire input, stopped at {}", self.current().lexeme)))
+//            Err(self.format_error(format!("Parser didn't consume entire input, stopped at {}", self.current().lexeme)))
 //        }
 
 
@@ -169,11 +169,11 @@ impl Parser {
     // \xyz.E -> \x.\y.\z.E
     fn desugar_abstraction(&mut self) {
         let mut i = 0;
-        while i < self.tokens.len() {
+        while i + 1 < self.tokens.len() { // Last token is EOF -> ignore
             let x = &self.tokens[i];
             i += 1;
             if x.ttype != TokenType::Lambda { continue; }
-            while self.tokens[i + 1].ttype == TokenType::Var && i < self.tokens.len() {
+            while i + 1< self.tokens.len() && self.tokens[i + 1].ttype == TokenType::Var {
                 self.tokens.insert(i + 1, Token::new(TokenType::Dot, ".".to_string(), -1, -1));
                 self.tokens.insert(i + 2, Token::new(TokenType::Lambda, "\\".to_string(), -1, -1));
                 i += 3;

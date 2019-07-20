@@ -1,18 +1,18 @@
 use std::collections::{HashMap, HashSet};
 
-use crate::format_error;
+use crate::{format_error, force_evaluate};
 use crate::parsing::Expr;
 use crate::lexing::Token;
 
 pub struct Evaluator {
-    env: HashMap<String, Expr>,
-    names: HashSet<String>
+    pub env: HashMap<String, Expr>,
+    pub names: HashSet<String>
 }
 
 impl Evaluator {
     pub fn new() -> Evaluator {
         Evaluator {
-            env: HashMap::new(),
+            env: Evaluator::generate_default_env(),
             names: HashSet::new()
         }
     }
@@ -25,7 +25,7 @@ impl Evaluator {
         let expr = self.expand_bindings(&expression)?;
         println!("Expanded (parenthesized): {:?}", expr);
         println!("Expanded: {}", expr);
-        println!("names: {:?}", self.names);
+//        println!("names: {:?}", self.names);
         self.beta_reduce(expr)
     }
 
@@ -51,7 +51,7 @@ impl Evaluator {
         }
     }
 
-    fn beta_reduce(&mut self, expression: Expr) -> Result<Expr, String> {
+    pub fn beta_reduce(&mut self, expression: Expr) -> Result<Expr, String> {
         match expression {
             Expr::Abstraction(_, _) => Ok(expression),
             Expr::Application(ref left, ref right) => self.reduce_application(&left, &right),
@@ -165,7 +165,6 @@ impl Evaluator {
     }
 
     fn generate_name(&self) -> String {
-        println!("Rename");
         for c in "abcdefghijklmnopqrstuvwxyz".chars() {
             let str = char::to_string(&c);
             if self.names.contains(&str) { continue; }
@@ -209,3 +208,65 @@ impl Evaluator {
     }
 
 }
+
+macro_rules! map(
+    { $($key:expr => $value:expr),+ } => {
+        {
+            let mut m = ::std::collections::HashMap::new();
+            $(
+                m.insert($key, $value);
+            )+
+            m
+        }
+     };
+);
+
+impl Evaluator {
+
+    fn generate_default_env() -> HashMap<String, Expr> {
+        let identity = force_evaluate(r#"\x.x"#);
+        let mockingbird = force_evaluate(r#"\f.f f"#);
+        let kestrel = force_evaluate(r#"\xy.x"#);
+        let kite = force_evaluate(r#"\xy.y"#);
+        let bluebird = force_evaluate(r#"\fgh.f (g h)"#); // Function composition
+        let thrush = force_evaluate(r#"\fg.g f"#);
+
+        map! {
+            "I".to_string() => identity,
+            "M".to_string() => mockingbird,
+            "K".to_string() => kestrel,
+            "KI".to_string() => kite,
+            "B".to_string() => bluebird,
+            "T".to_string() => thrush
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

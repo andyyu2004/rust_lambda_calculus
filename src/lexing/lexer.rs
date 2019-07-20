@@ -16,7 +16,7 @@ impl Lexer {
         }
     }
 
-    pub fn lex(&mut self, xs: String) -> Result<Vec<Token>, Vec<String>> {
+    pub fn lex(&mut self, xs: &str) -> Result<Vec<Token>, Vec<String>> {
         let mut it = xs.chars().peekable();
         let mut tokens = Vec::<Token>::new();
         let mut errors = Vec::<String>::new();
