@@ -68,9 +68,12 @@ impl Evaluator {
         }
     }
 
-    fn evaluate_meta_variable(&self, token: &Token) -> Result<Expr, String> {
+    fn evaluate_meta_variable(&mut self, token: &Token) -> Result<Expr, String> {
         match self.env.get(&token.lexeme) {
-            Some(expr) => Ok(expr.clone()),
+            Some(expr) => {
+                let clone = expr.clone();
+                self.expand_bindings(&clone)
+            },
             None => Err(format_error(&format!("Undefined metavariable: {}", token.lexeme), token))
         }
     }
@@ -104,7 +107,8 @@ impl Evaluator {
     fn reduce_application(&mut self, left: &Expr, right: &Expr) -> Result<Expr, String> {
         // if expr is redex
         if let Expr::Abstraction(name, expr) = self.beta_reduce(left.clone())? {
-            self.beta_reduce(self.substitute(&expr, &name, right)?)
+            let substitution = self.substitute(&expr, &name, right)?;
+            self.beta_reduce(substitution)
         } else {
             Ok(Expr::Application(Box::new(left.clone()), Box::new(right.clone())))
         }
@@ -136,7 +140,7 @@ impl Evaluator {
 //        }
 //    }
 
-    pub fn substitute(&self, expression: &Expr, var: &str, with: &Expr) -> Result<Expr, String> {
+    pub fn substitute(&mut self, expression: &Expr, var: &str, with: &Expr) -> Result<Expr, String> {
         match expression {
             Expr::Variable(name) => {
                 if name == var { Ok(with.clone()) } else { Ok(expression.clone()) }
@@ -164,11 +168,13 @@ impl Evaluator {
         }
     }
 
-    fn generate_name(&self) -> String {
+    fn generate_name(&mut self) -> String {
         for c in "abcdefghijklmnopqrstuvwxyz".chars() {
-            let str = char::to_string(&c);
-            if self.names.contains(&str) { continue; }
-            return str
+            let name = char::to_string(&c);
+//            println!("{} in {:?}", name, self.names);
+            if self.names.contains(&name) { continue; }
+            self.names.insert(name.clone());
+            return name
         }
         panic!("Ran out of variable names")
     }
@@ -226,18 +232,22 @@ impl Evaluator {
     fn generate_default_env() -> HashMap<String, Expr> {
         let identity = force_evaluate(r#"\x.x"#);
         let mockingbird = force_evaluate(r#"\f.f f"#);
+        let cardinal = force_evaluate(r#"\fab.f b a"#);
         let kestrel = force_evaluate(r#"\xy.x"#);
         let kite = force_evaluate(r#"\xy.y"#);
         let bluebird = force_evaluate(r#"\fgh.f (g h)"#); // Function composition
         let thrush = force_evaluate(r#"\fg.g f"#);
+        let not = force_evaluate(r#"\b.b (\xy.y) (\xy.x)"#);
 
         map! {
             "I".to_string() => identity,
             "M".to_string() => mockingbird,
+            "C".to_string() => cardinal,
             "K".to_string() => kestrel,
             "KI".to_string() => kite,
             "B".to_string() => bluebird,
-            "T".to_string() => thrush
+            "T".to_string() => thrush,
+            "NOT".to_string() => not
         }
     }
 

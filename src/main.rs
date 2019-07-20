@@ -114,6 +114,6 @@ fn print_help_text() {
     println!("Metavariables can either begin with a Uppercase letter followed by english alphanumerics or a '$' followed by any english alphanumerics");
     println!("Binding is expressed using the '=' operator and the right operand can be any lambda expression");
     println!("Examples: $false = \\xy.y, M = \\f.f f, Foo = x");
-    println!("Some single capital letters are by default bound to combinators, {{ I, K, KI, B, T, M }}");
+    println!("Some names are by default bound to combinators, {{ I, K, KI, B, T, M }} and boolean operators {{ NOT, AND, OR }}");
     println!("Use :e or :env for see current bindings");
 }
