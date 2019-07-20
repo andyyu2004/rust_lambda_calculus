@@ -53,7 +53,7 @@ impl Evaluator {
 
     pub fn beta_reduce(&mut self, expression: Expr) -> Result<Expr, String> {
         match expression {
-            Expr::Abstraction(name, expr) => Ok(Expr::Abstraction(name, Box::new(self.beta_reduce(*expr.clone())?)))
+            Expr::Abstraction(name, expr) => Ok(Expr::Abstraction(name, Box::new(self.beta_reduce(*expr.clone())?))),
             Expr::Application(ref left, ref right) => self.reduce_application(&left, &right),
             Expr::Grouping(expr) => self.beta_reduce(*expr),
             Expr::Variable(_) => Ok(expression),
