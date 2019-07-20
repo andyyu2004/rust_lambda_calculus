@@ -21,17 +21,24 @@ impl Evaluator {
 impl Evaluator {
 
     pub fn evaluate(&mut self, expression: Expr) -> Result<Expr, String> {
+        self.names.clear();
         let expr = self.expand_bindings(&expression)?;
         println!("Expanded (parenthesized): {:?}", expr);
         println!("Expanded: {}", expr);
+        println!("names: {:?}", self.names);
         self.beta_reduce(expr)
     }
 
     fn expand_bindings(&mut self, expr: &Expr) -> Result<Expr, String> {
         match expr {
-            Expr::Variable(_) => Ok(expr.clone()),
-            Expr::Abstraction(name, expr) =>
-                Ok(Expr::Abstraction(name.to_string(), Box::new(self.expand_bindings(expr)?))),
+            Expr::Variable(name) => {
+                self.names.insert(name.clone());
+                Ok(expr.clone())
+            },
+            Expr::Abstraction(name, expr) => {
+                self.names.insert(name.clone());
+                Ok(Expr::Abstraction(name.to_string(), Box::new(self.expand_bindings(expr)?)))
+            },
             Expr::Application(left, right) => Ok(Expr::Application(
                 Box::new(self.expand_bindings(left)?),
                 Box::new(self.expand_bindings(right)?),
@@ -110,6 +117,25 @@ impl Evaluator {
     (\y.E)[x->N] \y.E[x->N]
     */
 
+    // Doesn't consider bound variables etc...
+//    pub fn substitute(&self, expression: &Expr, var: &str, with: &Expr) -> Result<Expr, String> {
+//        match expression {
+//            Expr::Variable(name) => {
+//                if name == var { Ok(with.clone()) } else { Ok(expression.clone()) }
+//            }
+//            Expr::Application(left, right) =>
+//                Ok(Expr::Application(
+//                    Box::new(self.substitute(left, var, with)?),
+//                    Box::new(self.substitute(right, var, with)?),
+//                )),
+//            Expr::Grouping(expr) =>
+//                self.substitute(expr, var, with),
+//            Expr::Abstraction(name, expr) =>
+//                Ok(Expr::Abstraction(name.to_string(), Box::new(self.substitute(expr, var, with)?))),
+//            _ => unreachable!(),
+//        }
+//    }
+
     pub fn substitute(&self, expression: &Expr, var: &str, with: &Expr) -> Result<Expr, String> {
         match expression {
             Expr::Variable(name) => {
@@ -122,10 +148,30 @@ impl Evaluator {
                 )),
             Expr::Grouping(expr) =>
                 self.substitute(expr, var, with),
-            Expr::Abstraction(name, expr) =>
-                Ok(Expr::Abstraction(name.to_string(), Box::new(self.substitute(expr, var, with)?))),
+            Expr::Abstraction(name, expr) => {
+                if name == var { // Don't substitute bound variables
+                    Ok(expression.clone())
+                } else if !Evaluator::is_free(expr, name) {
+                    Ok(Expr::Abstraction(name.to_string(), Box::new(self.substitute(expr, var, with)?)))
+                } else {
+                    // name is free in expr thus require rename
+                    let new_name = self.generate_name();
+                    let new_expr = Evaluator::alpha_rename(expr, name, &new_name);
+                    Ok(Expr::Abstraction(new_name, Box::new(self.substitute(&new_expr, var, with)?)))
+                }
+            },
             _ => unreachable!(),
         }
+    }
+
+    fn generate_name(&self) -> String {
+        println!("Rename");
+        for c in "abcdefghijklmnopqrstuvwxyz".chars() {
+            let str = char::to_string(&c);
+            if self.names.contains(&str) { continue; }
+            return str
+        }
+        panic!("Ran out of variable names")
     }
 
     // Alpha conversion
@@ -145,6 +191,20 @@ impl Evaluator {
             Expr::Binding(name, expr) => Expr::Binding(name.clone(), Box::new(Evaluator::alpha_rename(expr, from, to))),
             _ => unreachable!("Alpha renaming metavariable or binding")
 
+        }
+    }
+
+    /* x is free in E if
+    E = x
+    E = \y.E' and x is free in E'
+    */
+    pub fn is_free(expression: &Expr, var: &str) -> bool {
+        match expression {
+            Expr::Variable(_) => true,
+            Expr::Abstraction(name, expr) => name != var && Evaluator::is_free(expr, var),
+            Expr::Application(left, right) => Evaluator::is_free(left, var) || Evaluator::is_free(right, var),
+            Expr::Grouping(expr) => Evaluator::is_free(expr, var),
+            _ => unreachable!("Checking free variable in binding or metavariable")
         }
     }
 

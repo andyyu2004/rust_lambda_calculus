@@ -71,7 +71,7 @@ fn main() {
         println!("Parenthesized: {:?}", expr);
         println!("{}", expr);
 
-        println!("Renamed to t: {}", Evaluator::alpha_rename(&expr, &"x".to_string(), &"t".to_string()));
+//        println!("Renamed to t: {}", Evaluator::alpha_rename(&expr, &"x".to_string(), &"t".to_string()));
 
 //        evaluator.evaluate(expr);
         let redex = match evaluator.evaluate(expr) {
