@@ -83,6 +83,8 @@ fn main() {
 
         println!("β-reduction (parenthesized): {:?}", redex);
         println!("β-reduction: {}", redex);
+
+        println!();
     }
 }
 

@@ -45,15 +45,19 @@ impl Evaluator {
             )),
             Expr::Grouping(expr) => Ok(Expr::Grouping(Box::new(self.expand_bindings(expr)?))),
             Expr::Binding(x, expr) => Ok(Expr::Binding(x.clone(), Box::new(self.expand_bindings(expr)?))),
-            Expr::MetaVariable(token) => Ok(Expr::Grouping(
-                Box::new(self.evaluate_meta_variable(&token)?)
-            ))
+            Expr::MetaVariable(token) => {
+                let expr = Expr::Grouping(
+                    Box::new(self.evaluate_meta_variable(&token)?)
+                );
+                self.expand_bindings(&expr)
+            }
         }
     }
 
     pub fn beta_reduce(&mut self, expression: Expr) -> Result<Expr, String> {
         match expression {
             Expr::Abstraction(name, expr) => Ok(Expr::Abstraction(name, Box::new(self.beta_reduce(*expr.clone())?))),
+            // Expr::Abstraction(_, _) => Ok(expression),
             Expr::Application(ref left, ref right) => self.reduce_application(&left, &right),
             Expr::Grouping(expr) => self.beta_reduce(*expr),
             Expr::Variable(_) => Ok(expression),
@@ -70,10 +74,7 @@ impl Evaluator {
 
     fn evaluate_meta_variable(&mut self, token: &Token) -> Result<Expr, String> {
         match self.env.get(&token.lexeme) {
-            Some(expr) => {
-                let clone = expr.clone();
-                self.beta_reduce(clone)
-            },
+            Some(expr) => Ok(expr.clone()),
             None => Err(format_error(&format!("Undefined metavariable: {}", token.lexeme), token))
         }
     }
@@ -150,11 +151,10 @@ impl Evaluator {
                     Box::new(self.substitute(left, var, with)?),
                     Box::new(self.substitute(right, var, with)?),
                 )),
-            Expr::Grouping(expr) =>
-                self.substitute(expr, var, with),
+            Expr::Grouping(expr) => self.substitute(expr, var, with),
             Expr::Abstraction(name, expr) => {
                 if name == var { // Don't substitute bound variables
-                    Ok(expression.clone())
+                    Ok(expression.clone())  
                 } else if !Evaluator::is_free(expr, name) {
                     Ok(Expr::Abstraction(name.to_string(), Box::new(self.substitute(expr, var, with)?)))
                 } else {
@@ -184,7 +184,7 @@ impl Evaluator {
         match expression {
             Expr::Variable(name) => if name == from { Expr::Variable(to.clone()) } else { expression.clone() },
             Expr::Application(left, right) => Expr::Application(
-                Box::new(Evaluator::alpha_rename(left, from,to)),
+                Box::new(Evaluator::alpha_rename(left, from, to)),
                 Box::new(Evaluator::alpha_rename(right, from, to)),
             ),
             Expr::Grouping(expr) => Expr::Grouping(Box::new(Evaluator::alpha_rename(expr, from, to))),
